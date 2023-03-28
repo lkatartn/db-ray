@@ -1,9 +1,9 @@
 {
   "name": "db-ray",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "scripts": {
     "dev": "next dev -H 127.0.0.1 -p 3011",
-    "build": "next build && Remove-Item -Path \".next/cache\" -Recurse -Force",
+    "build": "next build",
     "start": "next start -H 127.0.0.1",
     "lint": "next lint"
   },

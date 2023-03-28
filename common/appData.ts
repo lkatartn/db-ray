@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import os from "os";
 
 const APP_FOLDER_NAME = "db-ray";
 
@@ -8,7 +9,7 @@ export const getAppDataFolder = () => {
     process.env.APPDATA ||
     (process.platform == "darwin"
       ? process.env.HOME + "/Library/Preferences"
-      : "/var/local");
+      : path.join(os.homedir(), ".local", "share"));
   return appDataFolder;
 };
 
@@ -33,13 +34,23 @@ interface AppDataStructure {
   apiKey?: string;
 }
 
+function createDirIfNotExists(dir: string) {
+  if (!fs.existsSync(dir)) {
+    createDirIfNotExists(path.dirname(dir));
+    fs.mkdirSync(dir);
+  }
+}
+
 const getOrCreateHistoryFile = async () => {
   const appDataFolder = await getAppDataFolder();
   const appDataPath = path.join(appDataFolder, APP_FOLDER_NAME);
   const historyFilePath = path.join(appDataPath, "history.json");
-  if (!fs.existsSync(appDataPath)) {
-    fs.mkdirSync(appDataPath);
-  }
+
+  console.log("App Data Folder:", appDataFolder);
+  console.log("App Data Path:", appDataPath);
+  console.log("History File Path:", historyFilePath);
+
+  createDirIfNotExists(appDataPath);
 
   if (!fs.existsSync(historyFilePath)) {
     fs.writeFileSync(

@@ -1,7 +1,6 @@
 import { saveApiKey, getApiKey } from "@/common/appData";
+import { DOMAIN } from "./domain";
 
-export const DOMAIN = "http://localhost:3131";
-// export const DOMAIN = "https://db-ray.pro";
 const API_PATH = "/api";
 const API_URL = `${DOMAIN}${API_PATH}`;
 

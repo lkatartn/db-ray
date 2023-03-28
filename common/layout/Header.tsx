@@ -5,6 +5,7 @@ import { useLayout } from "./useLayout";
 import useSWR from "swr";
 import { defaultFetcher } from "../defaultFetcher";
 import type { ProApiKeyStatus } from "@/pages/api/pro/checkProStatus";
+import { DOMAIN } from "@/features/pro/domain";
 
 export const Header = () => {
   const { layoutState, setSectionState } = useLayout();
@@ -77,7 +78,7 @@ export const Header = () => {
         ) : null}
         {data?.status && data?.status !== "active" ? (
           <a
-            href="http://localhost:3131/link"
+            href={`${DOMAIN}/link`}
             target="_blank"
             className={css({
               display: "flex",
