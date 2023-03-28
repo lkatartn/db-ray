@@ -1,0 +1,15 @@
+# Ignore everything
+*
+
+# Allow essential files
+!package.json
+!README.md
+!LICENSE
+
+# Include 'out' folder
+!/out/**/*
+!/.next/**/*
+# but not include next cache
+/.next/cache/**/*
+!cli.js
+
