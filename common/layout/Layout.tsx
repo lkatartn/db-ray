@@ -101,7 +101,6 @@ const MainContent = ({ children }: React.PropsWithChildren) => {
       <div
         className={css({
           padding: "0 16px 16px",
-          overflow: "auto",
           flex: 1,
         })}
       >
@@ -116,7 +115,14 @@ const MainContent = ({ children }: React.PropsWithChildren) => {
                 padding: "12px 4px",
               })}
             >
-              <div>
+              <div
+                className={css({
+                  padding: "12px 4px",
+                  resize: "vertical",
+                  height: "250px",
+                  overflow: "auto",
+                })}
+              >
                 <DefaultEditor ref={editorRef} />
               </div>
             </div>
@@ -168,7 +174,6 @@ const MainContent = ({ children }: React.PropsWithChildren) => {
             </div>
           </>
         ) : null}
-
         {result ? (
           <>
             <SpacerVertical size={8} />

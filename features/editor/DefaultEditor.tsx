@@ -8,7 +8,7 @@ export const DefaultEditor = forwardRef((props, ref) => {
   const { setEditor } = useEditor();
   return (
     <Editor
-      height="250px"
+      height="100%"
       defaultLanguage="sql"
       defaultValue="SELECT * FROM pg_database"
       options={{ lineNumbers: "off", minimap: { enabled: false } }}

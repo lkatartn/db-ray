@@ -68,11 +68,8 @@ table {
   width: 100%;
   background-color: white;
   position: relative;
-  overflow: auto;
 }
 thead {
-  position: sticky;
-  top: 0;
   background-color: #f7fafc;
   color: #718096;
   font-size: 16px;
@@ -98,11 +95,11 @@ td {
   text-overflow: ellipsis;
 }
 th {
+  position: sticky;
   top: 0;
   background-color: #f7fafc;
   color: #718096;
   font-size: 16px;
-  max-width: 400px;
 }
 
 .spinner_aj0A {

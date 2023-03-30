@@ -30,6 +30,9 @@ export const QueryResultAsTable = <T extends any>({
       <div
         className={css({
           boxShadow: "0 0 0 1px rgba(0, 0, 0, 0.1)",
+          display: "inline-block",
+          maxHeight: "50vh",
+          maxWidth: "100%",
           overflow: "auto",
           margin: 4,
         })}
