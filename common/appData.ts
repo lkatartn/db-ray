@@ -46,10 +46,6 @@ const getOrCreateHistoryFile = async () => {
   const appDataPath = path.join(appDataFolder, APP_FOLDER_NAME);
   const historyFilePath = path.join(appDataPath, "history.json");
 
-  console.log("App Data Folder:", appDataFolder);
-  console.log("App Data Path:", appDataPath);
-  console.log("History File Path:", historyFilePath);
-
   createDirIfNotExists(appDataPath);
 
   if (!fs.existsSync(historyFilePath)) {

@@ -15,7 +15,6 @@ export const tokenStorage = {
     return tokenStorage.token;
   },
   set: (token: string) => {
-    console.log("saved token", token);
     tokenStorage.token = token;
     saveApiKey(token);
   },

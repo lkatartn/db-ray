@@ -82,6 +82,33 @@ const buttonClassName = css({
   },
 });
 
+const selectCharacterDisregardingLineBreaks = (
+  editor: editor.IStandaloneCodeEditor,
+  position: number
+) => {
+  // count lineBreaks before position
+  const value = editor.getValue();
+  const valueBeforePosition = value.slice(0, position);
+  const lastLine = valueBeforePosition.split("\n").pop();
+  const lineBreaksBeforePosition = valueBeforePosition.split("\n").length - 1;
+  const columnInLine = lastLine?.length || 0;
+  // this is a character position without line breaks
+  const lineNumber = lineBreaksBeforePosition + 1;
+
+  // select the error position in editor
+  editor.setPosition({
+    lineNumber: 1,
+    column: position,
+  });
+  // highlight character at error position
+  editor.setSelection({
+    startLineNumber: lineNumber,
+    startColumn: columnInLine,
+    endLineNumber: lineNumber,
+    endColumn: columnInLine + 1,
+  });
+};
+
 const MainContent = ({ children }: React.PropsWithChildren) => {
   const { layoutState } = useLayout();
 
@@ -141,9 +168,20 @@ const MainContent = ({ children }: React.PropsWithChildren) => {
                         const editor = editorRef.current;
                         if (editor) {
                           const value = editor.getValue();
-                          call({ query: value }).then(() => {
-                            mutateGlobal("/api/history/list");
-                          });
+                          call({ query: value })
+                            .then(() => {
+                              mutateGlobal("/api/history/list");
+                            })
+                            .catch((error) => {
+                              if (error.position) {
+                                // this is a character position without line breaks
+                                const positionToSelect = +error.position;
+                                selectCharacterDisregardingLineBreaks(
+                                  editor,
+                                  positionToSelect
+                                );
+                              }
+                            });
                         }
                       }
                     : undefined
@@ -169,10 +207,28 @@ const MainContent = ({ children }: React.PropsWithChildren) => {
                     : undefined,
                 })}
               >
-                {error ? "Error: " + error.message : result ? "Success!" : null}
+                {error ? "Error" : result ? "Success!" : null}
               </span>
             </div>
           </>
+        ) : null}
+        {error ? (
+          <div>
+            <pre
+              className={css({
+                whiteSpace: "pre-wrap",
+                color: colors.gray900,
+                fontSize: "12px",
+                margin: "8px",
+                padding: "12px",
+                boxShadow: "inset 0 0 0 1px rgba(0,0,0,0.1)",
+                overflow: "auto",
+                maxHeight: "50vh",
+              })}
+            >
+              {JSON.stringify(error, null, 2)}
+            </pre>
+          </div>
         ) : null}
         {result ? (
           <>

@@ -7,6 +7,7 @@ export const useCallableApi = <Input, Result>(url: string) => {
 
   const call = useCallback(
     async (input: Input) => {
+      setError(undefined);
       setLoading(true);
       try {
         const response = await fetch(url, {
@@ -16,6 +17,12 @@ export const useCallableApi = <Input, Result>(url: string) => {
           },
           body: JSON.stringify(input),
         });
+
+        if (response.status !== 200) {
+          const errorBody = await response.json();
+          throw errorBody;
+        }
+
         const result = await response.json();
         setResult(result);
         setLoading(false);
