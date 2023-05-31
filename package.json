@@ -1,6 +1,6 @@
 {
   "name": "db-ray",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "scripts": {
     "dev": "next dev -H 127.0.0.1 -p 3011",
     "build": "next build",
