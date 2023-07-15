@@ -2,7 +2,7 @@ import { DefaultEditor } from "@/features/editor/DefaultEditor";
 import { QueryResultAsTable } from "@/features/queryResult/QueryResultAsTable";
 import { css, cx } from "@emotion/css";
 import { useRouter } from "next/router";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { editor } from "monaco-editor/esm/vs/editor/editor.api";
 import { QueryResult } from "../queryTypes";
 import { useCallableApi } from "../useCallableApi";
@@ -117,6 +117,7 @@ const MainContent = ({ children }: React.PropsWithChildren) => {
     QueryResult<Record<string, unknown>>
   >("/api/executeQuery");
   const editorRef = useRef<editor.IStandaloneCodeEditor>(null);
+  const [resultStatus, setResultStatus] = useState<string | null>(null);
 
   const { data } = useSWR<{ status: ProApiKeyStatus }>(
     "/api/pro/checkProStatus",
@@ -168,9 +169,19 @@ const MainContent = ({ children }: React.PropsWithChildren) => {
                         const editor = editorRef.current;
                         if (editor) {
                           const value = editor.getValue();
+                          const startTime = Date.now();
                           call({ query: value })
                             .then(() => {
+                              const endTime = Date.now();
+                              const duration = endTime - startTime;
                               mutateGlobal("/api/history/list");
+                              setResultStatus(
+                                `Done in ${(duration / 1000).toFixed(2)}s`
+                              );
+                              // to update the name of added query
+                              setTimeout(() => {
+                                mutateGlobal("/api/history/list");
+                              }, 3000);
                             })
                             .catch((error) => {
                               if (error.position) {
@@ -182,6 +193,7 @@ const MainContent = ({ children }: React.PropsWithChildren) => {
                                 );
                               }
                             });
+                          setResultStatus(null);
                         }
                       }
                     : undefined
@@ -207,7 +219,7 @@ const MainContent = ({ children }: React.PropsWithChildren) => {
                     : undefined,
                 })}
               >
-                {error ? "Error" : result ? "Success!" : null}
+                {error ? "Error" : result ? resultStatus : null}
               </span>
             </div>
           </>

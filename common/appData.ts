@@ -16,6 +16,7 @@ export const getAppDataFolder = () => {
 export interface HistoryRecord {
   query: string;
   createdAt: string;
+  lastExecutedAt?: string;
   /**
    * The name of the database that this query was executed on
    */
@@ -79,10 +80,35 @@ export const addHistoryRecord = async ({
       history: [],
     };
   }
+
+  // if the query already exists set the lastExecutedAt date
+  const existingQueryIndex = historyFile.connections[
+    connectionName
+  ].history.findIndex((record) => record.query === query);
+
+  if (existingQueryIndex !== -1) {
+    historyFile.connections[connectionName].history[existingQueryIndex] = {
+      ...historyFile.connections[connectionName].history[existingQueryIndex],
+      lastExecutedAt: new Date().toISOString(),
+    };
+
+    // put the record at the top of the list
+    historyFile.connections[connectionName].history = [
+      historyFile.connections[connectionName].history[existingQueryIndex],
+      ...historyFile.connections[connectionName].history.filter(
+        (_, index) => index !== existingQueryIndex
+      ),
+    ];
+
+    fs.writeFileSync(historyFilePath, JSON.stringify(historyFile));
+    return historyFile.connections[connectionName].history[existingQueryIndex];
+  }
+
   historyFile.connections[connectionName].history = [
     {
       query,
       createdAt: new Date().toISOString(),
+      lastExecutedAt: new Date().toISOString(),
       name,
       forDatabase,
     },
@@ -113,6 +139,7 @@ export const editHistoryRecordByCreationDate = async ({
 }: {
   connectionName: string;
   createdAt: string;
+  lastExecutedAt?: string;
   name?: string;
   query?: string;
 }) => {

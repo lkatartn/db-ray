@@ -220,7 +220,10 @@ const HistoryItem = ({ record }: { record: HistoryRecord }) => {
             {record.name ?? "Untitled"}
           </div>
 
-          <HistoryRelativeDate date={record.createdAt} ml={2} />
+          <HistoryRelativeDate
+            date={record.lastExecutedAt || record.createdAt}
+            ml={2}
+          />
         </div>
       </Tooltip>
       <Menu>

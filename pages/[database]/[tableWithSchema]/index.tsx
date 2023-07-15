@@ -30,11 +30,6 @@ export const DataBasePage = () => {
   return (
     <>
       <Layout
-        defaultLayout={{
-          historySection: false,
-          proAI: true,
-          sqlEditor: true,
-        }}
         sidebar={
           <>
             <SectionHeading>{route.query.database}</SectionHeading>

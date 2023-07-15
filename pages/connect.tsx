@@ -16,9 +16,12 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
+import { parse } from "@/common/utils/urlParser";
+import { Spinner } from "@/common/Spinner";
 
 export default function Connect() {
   const [errorText, setErrorText] = useState<string | null>(null);
+  const [connecting, setConnecting] = useState(false);
 
   return (
     <Flex
@@ -46,6 +49,7 @@ export default function Connect() {
           onSubmit={(e) => {
             e.preventDefault();
             setErrorText(null);
+            setConnecting(true);
             const formData = new FormData(e.currentTarget);
             const { connectionString, ...otherData } = Object.fromEntries(
               formData.entries()
@@ -62,8 +66,18 @@ export default function Connect() {
                   connectionString !== "" ? connectionString : otherData,
               }),
             }).then((r) => {
+              setConnecting(false);
               if (r.status === 200) {
-                window.location.href = "/";
+                try {
+                  const dbName =
+                    connectionString !== ""
+                      ? parseSqlConnectionUrl(connectionString as string)
+                          .database
+                      : otherData.database;
+                  window.location.href = "/" + dbName;
+                } catch (e) {
+                  window.location.href = "/";
+                }
               } else {
                 r.json().then((r) => setErrorText(JSON.stringify(r, null, 2)));
               }
@@ -157,7 +171,14 @@ export default function Connect() {
               bg: "blue.500",
             }}
           >
-            Connect
+            {connecting ? (
+              <>
+                <chakra.span mr="3.5">Connecting </chakra.span>
+                <Spinner />
+              </>
+            ) : (
+              "Connect"
+            )}
           </Button>
         </chakra.form>
         {errorText ? (
@@ -181,4 +202,16 @@ export default function Connect() {
       </Stack>
     </Flex>
   );
+}
+
+function parseSqlConnectionUrl(connectionString: string) {
+  const url = parse(connectionString);
+
+  return {
+    server: url.hostname,
+    database: url.pathname.slice(1), // remove the leading '/'
+    user: url.auth?.split(":")[0],
+    password: url.auth?.split(":")[1],
+    port: url.port,
+  };
 }

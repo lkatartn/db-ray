@@ -53,7 +53,7 @@ export const Header = () => {
           alignItems: "baseline",
         })}
       >
-        <p>Views:</p>
+        {/* <p>Views:</p>
         <SpacerHorizontal size={16} />
         <BadgeAsWithCheckBox
           label="SQL editor"
@@ -75,7 +75,7 @@ export const Header = () => {
               onSetActive={(active) => setSectionState("proAI", active)}
             />
           </>
-        ) : null}
+        ) : null} */}
         {data?.status && data?.status !== "active" ? (
           <a
             href={`${DOMAIN}/link`}
