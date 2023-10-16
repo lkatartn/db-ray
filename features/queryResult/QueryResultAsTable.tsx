@@ -65,6 +65,9 @@ const stringifyColumnValue = (
   // this is JSON
   if (fieldDataTypeID === 114) {
     return JSON.stringify(value);
+  } else if (fieldDataTypeID === 3802) {
+    // this is JSONB
+    return JSON.stringify(value);
   }
 
   return (value as any)?.toString();

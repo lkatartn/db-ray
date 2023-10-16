@@ -1,6 +1,6 @@
 {
   "name": "db-ray",
-  "version": "0.2.6",
+  "version": "0.2.8",
   "scripts": {
     "dev": "next dev -H 127.0.0.1 -p 3011",
     "build": "next build",
@@ -18,10 +18,12 @@
     "@emotion/styled": "^11.10.5",
     "@monaco-editor/react": "^4.4.6",
     "@next/font": "13.1.2",
+    "commander": "^11.0.0",
     "framer-motion": "^8.5.0",
     "knex": "^2.4.1",
     "next": "^12.3.4",
     "pg": "^8.8.0",
+    "qs": "^6.11.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-monaco-editor": "^0.51.0",

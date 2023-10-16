@@ -23,6 +23,22 @@ export const setConnection = async (
   return dbConnectionPool[name];
 };
 
+// check if params are passed to env
+[
+  process.env.DB_PARAM_HOST,
+  process.env.DB_PARAM_PORT,
+  process.env.DB_PARAM_USERNAME,
+  process.env.DB_PARAM_DBNAME || "postgres",
+  process.env.DB_PARAM_PASSWORD,
+].every((param) => param !== undefined) &&
+  setConnection("default", {
+    host: process.env.DB_PARAM_HOST,
+    port: parseInt(process.env.DB_PARAM_PORT!),
+    user: process.env.DB_PARAM_USERNAME,
+    password: process.env.DB_PARAM_PASSWORD,
+    database: process.env.DB_PARAM_DBNAME,
+  });
+
 const getConnectionByName = async (name: string) => {
   return dbConnectionPool[name];
 };
