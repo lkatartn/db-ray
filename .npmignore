@@ -6,10 +6,11 @@
 !README.md
 !LICENSE
 
-# Include 'out' folder
-!/out/**/*
-!/.next/**/*
-# but not include next cache
-/.next/cache/**/*
+# Include 'dist' folder
+!/dist/**/*
+!/public/**/*
+
+!/backend/dist/index.js
+
 !cli.js
 
