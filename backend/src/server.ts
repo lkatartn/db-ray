@@ -1,15 +1,10 @@
-import express, { Express, NextFunction, Request, Response } from "express";
+import express, { Express } from "express";
 import path from "path";
 import { exec } from "child_process";
 import bodyParser from "body-parser";
 import { program } from "commander";
-import http from "http";
-import {
-  getDefaultConnection,
-  setConnection,
-} from "./features/connection/dbConnection";
+import { setConnection } from "./features/connection/dbConnection";
 import { rootRouter } from "./api/root";
-import httpProxy from "http-proxy";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
 const jsonParser = bodyParser.json();
@@ -45,28 +40,6 @@ if (development) {
   });
 
   app.use(wsProxy);
-
-  // app.use((req, res) => {
-  //   const options: http.RequestOptions = {
-  //     hostname: "localhost",
-  //     port: VitePort,
-
-  //     path: req.url,
-  //     method: req.method,
-  //     headers: req.headers,
-  //   };
-
-  //   const proxy = http.request(options, function (targetRes) {
-  //     res.writeHead(targetRes.statusCode!, targetRes.headers);
-  //     targetRes.pipe(res, {
-  //       end: true,
-  //     });
-  //   });
-
-  //   req.pipe(proxy, {
-  //     end: true,
-  //   });
-  // });
 } else {
   const staticParams = {
     etag: false,
@@ -79,8 +52,6 @@ if (development) {
   app.use("*", (req: express.Request, res: express.Response) => {
     res.sendFile(path.join(__dirname, "../../dist", "index.html"));
   });
-
-  // app.use("/", express.static("../dist"));
 }
 
 app.listen(port, "127.0.0.1", () => {

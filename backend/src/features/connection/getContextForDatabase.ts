@@ -1,4 +1,4 @@
-import { getDefaultConnection } from "./dbConnection";
+import { getDefaultKnexConnection } from "./dbConnection";
 
 interface TableContext {
   name: string;
@@ -18,7 +18,7 @@ interface TableContext {
 export const getTablesStructureContextForDatabase = async (
   databaseName: string
 ): Promise<TableContext[]> => {
-  const conn = await getDefaultConnection();
+  const conn = await getDefaultKnexConnection();
   const tableStructure = await conn.raw(
     `
       SELECT
@@ -93,7 +93,7 @@ export const getForeignKeyConstraints = async (): Promise<
     foreign_column_name: string;
   }[]
 > => {
-  const conn = await getDefaultConnection();
+  const conn = await getDefaultKnexConnection();
   const result = await conn.raw(
     `
     SELECT

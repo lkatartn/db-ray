@@ -7,6 +7,7 @@ import {
 } from "../common/appData";
 import { Router } from "express";
 import { defaultErrorHandler } from "../common/defaultErrorHandler";
+import { getConnectionByName } from "../features/connection/dbConnection";
 
 export const historyRouter = Router();
 
@@ -14,8 +15,15 @@ historyRouter.get(
   "/list",
   defaultErrorHandler(async (req, res) => {
     // get the connection from query string
-    const connection = req.query.connection as string;
-    const result = await getHistoryRecords((connection as string) ?? "default");
+    const connectionName = (req.query.connection as string) ?? "default";
+    const forCurrentConnection =
+      (req.query.forCurrentConnection as string) == "true";
+    if (forCurrentConnection) {
+      const connectionHash = getConnectionByName(connectionName).hash;
+      const result = await getHistoryRecords(connectionName, connectionHash);
+      return res.send(result);
+    }
+    const result = await getHistoryRecords(connectionName);
     res.send(result);
   })
 );

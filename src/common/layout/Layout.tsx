@@ -190,12 +190,18 @@ const MainContent = ({ children }: React.PropsWithChildren) => {
                               const endTime = Date.now();
                               const duration = endTime - startTime;
                               mutateGlobal("/api/history/list");
+                              mutateGlobal(
+                                "/api/history/list?forCurrentConnection=true"
+                              );
                               setResultStatus(
                                 `Done in ${(duration / 1000).toFixed(2)}s`
                               );
                               // to update the name of added query
                               setTimeout(() => {
                                 mutateGlobal("/api/history/list");
+                                mutateGlobal(
+                                  "/api/history/list?forCurrentConnection=true"
+                                );
                               }, 3000);
                             })
                             .catch((error) => {

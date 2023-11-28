@@ -9,6 +9,12 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tab,
+  TabIndicator,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
 } from "@chakra-ui/react";
 import { getRelativeDate } from "@/common/dateFormatter";
 import useSWR, { mutate as mutateGlobal } from "swr";
@@ -20,15 +26,53 @@ import { colors } from "@/common/colors";
 import { SpacerVertical } from "@/common/Spacer";
 
 export const HistorySection = () => {
+  return (
+    <>
+      <SectionHeading mt={1}>History</SectionHeading>
+      <SpacerVertical size={2} />
+      <Tabs position="relative" variant="line">
+        <TabList>
+          <Tab flexShrink={0}>Current connection</Tab>
+          <Tab flexShrink={0} flexGrow={1}>
+            All
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel p={0}>
+            <SpacerVertical size={10} />
+
+            <CurrentConnectionistorySection />
+          </TabPanel>
+          <TabPanel p={0}>
+            <SpacerVertical size={10} />
+
+            <AllHistorySection />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    </>
+  );
+};
+const CurrentConnectionistorySection = () => {
+  const { data: history, error } = useSWR<HistoryRecord[]>(
+    "/api/history/list?forCurrentConnection=true",
+    defaultFetcher
+  );
+  return (
+    <>
+      {history?.map((record, i) => (
+        <HistoryItem record={record} key={record.createdAt} />
+      ))}
+    </>
+  );
+};
+const AllHistorySection = () => {
   const { data: history, error } = useSWR<HistoryRecord[]>(
     "/api/history/list",
     defaultFetcher
   );
-
   return (
     <>
-      <SectionHeading mt={1}>History</SectionHeading>
-      <SpacerVertical size={4} />
       {history?.map((record, i) => (
         <HistoryItem record={record} key={record.createdAt} />
       ))}
@@ -98,6 +142,7 @@ const HistoryItem = ({ record }: { record: HistoryRecord }) => {
           }),
         }).then(() => {
           mutateGlobal("/api/history/list");
+          mutateGlobal("/api/history/list?forCurrentConnection=true");
         });
       }
     }
@@ -113,6 +158,7 @@ const HistoryItem = ({ record }: { record: HistoryRecord }) => {
       }),
     }).then(() => {
       mutateGlobal("/api/history/list");
+      mutateGlobal("/api/history/list?forCurrentConnection=true");
     });
   };
 

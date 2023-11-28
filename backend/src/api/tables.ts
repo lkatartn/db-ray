@@ -1,5 +1,5 @@
 import { defaultErrorHandler } from "../common/defaultErrorHandler";
-import { getDefaultConnection } from "../features/connection/dbConnection";
+import { getDefaultKnexConnection } from "../features/connection/dbConnection";
 import { Router } from "express";
 
 export const tablesRouter = Router();
@@ -10,7 +10,7 @@ tablesRouter.get(
     // get table name from queryString
     const table = req.query.table;
     const schema = req.query.schema;
-    const conn = await getDefaultConnection();
+    const conn = await getDefaultKnexConnection();
 
     const result = await conn.raw(
       `
@@ -31,7 +31,7 @@ tablesRouter.get(
     // get database name from path
     const { database } = req.params;
     // get table names and sizes from database
-    const conn = await getDefaultConnection();
+    const conn = await getDefaultKnexConnection();
     if (!conn) {
       res.setHeader("Location", "/connect");
       return res.status(400).send("Redirecting to /connect");

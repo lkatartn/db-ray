@@ -1,11 +1,24 @@
 import knex, { Knex } from "knex";
+import crypto from "crypto";
 
+function getHashedString(input: string): string {
+  const salt = "db-ray salt";
+  const hash = crypto.createHmac("sha256", salt).update(input).digest("hex");
+  return hash;
+}
 export const getDefaultConnectionOptions = async () => {
   return null;
 };
 
 let dbConnectionPool: {
-  [key: string]: ReturnType<typeof knex>;
+  [key: string]: {
+    knexConnection: ReturnType<typeof knex>;
+    /**
+     * crypto hash of Stringified connection options
+     * that is safe to keep on fs
+     */
+    hash: string;
+  };
 } = (global as any).dbConnectionPool ? (global as any).dbConnectionPool : {};
 
 if (!(global as any).dbConnectionPool) {
@@ -15,15 +28,18 @@ if (!(global as any).dbConnectionPool) {
 export const setConnection = async (
   name: string,
   connection: Knex.PgConnectionConfig
-) => {
-  dbConnectionPool[name] = knex({
-    client: "pg",
-    connection,
-  });
-  return dbConnectionPool[name];
+): Promise<ReturnType<typeof knex>> => {
+  dbConnectionPool[name] = {
+    knexConnection: knex({
+      client: "pg",
+      connection,
+    }),
+    hash: getHashedString(JSON.stringify(connection)),
+  };
+  return dbConnectionPool[name].knexConnection;
 };
 
-const getConnectionByName = (name: string) => {
+export const getConnectionByName = (name: string) => {
   return dbConnectionPool[name];
 };
 
@@ -31,12 +47,14 @@ const listConnections = async () => {
   return Object.keys(dbConnectionPool);
 };
 
-export const getDefaultConnection = () => {
-  return getConnectionByName("default");
+export const getDefaultKnexConnection = (): ReturnType<typeof knex> => {
+  return getConnectionByName("default")?.knexConnection;
 };
 
-export const isConnectionFunctioning = async (name: string) => {
-  const connection = getConnectionByName(name);
+export const isConnectionFunctioning = async (
+  name: string
+): Promise<boolean> => {
+  const connection = getConnectionByName(name).knexConnection;
 
   try {
     if (!connection) {

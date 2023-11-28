@@ -1,5 +1,5 @@
 import {
-  getDefaultConnection,
+  getDefaultKnexConnection,
   isConnectionFunctioning,
   setConnection,
 } from "../features/connection/dbConnection";
@@ -40,7 +40,7 @@ rootRouter.post(
 );
 
 const getDatabases = async () => {
-  const conn = await getDefaultConnection();
+  const conn = await getDefaultKnexConnection();
 
   const databases = await conn.raw("SELECT datname FROM pg_database");
   return databases.rows;
@@ -54,7 +54,7 @@ const redirectToConnect = (res: Response) => {
 rootRouter.get(
   "/getDatabases",
   defaultErrorHandler(async (req, res) => {
-    const conn = await getDefaultConnection();
+    const conn = await getDefaultKnexConnection();
     if (!conn) {
       return redirectToConnect(res);
     }
@@ -65,7 +65,7 @@ rootRouter.get(
 rootRouter.get(
   "/isConnectionFunctioning",
   defaultErrorHandler(async (req, res) => {
-    const conn = await getDefaultConnection();
+    const conn = await getDefaultKnexConnection();
     if (!conn) {
       return redirectToConnect(res);
     }
@@ -79,7 +79,7 @@ rootRouter.post(
   defaultErrorHandler(async (req, res) => {
     // get the query from the request body
     const { query, forDatabase } = req.body;
-    const conn = await getDefaultConnection();
+    const conn = await getDefaultKnexConnection();
     if (!conn) {
       return redirectToConnect(res);
     }
