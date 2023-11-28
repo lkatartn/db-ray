@@ -1,11 +1,13 @@
-import { chakra } from "@chakra-ui/react";
+import { chakra, OtherProps } from "@chakra-ui/react";
 import { css } from "@emotion/css";
 
 export const SectionHeading = ({
   children,
   className,
   ...props
-}: React.PropsWithChildren<React.HTMLAttributes<HTMLHeadingElement>>) => {
+}: React.PropsWithChildren<
+  React.HTMLAttributes<HTMLHeadingElement> & { mt?: number }
+>) => {
   return (
     <chakra.h2
       className={css({
