@@ -22,7 +22,7 @@ export const TableList = ({
   if (error) {
     return (
       <Box ml={4} {...props}>
-        <chakra.p color="red.500">Error: {error}</chakra.p>
+        <chakra.p color="red.500">Error: {JSON.stringify(error)}</chakra.p>
       </Box>
     );
   }
@@ -30,7 +30,7 @@ export const TableList = ({
   return (
     <>
       <Box {...props}>
-        {tables?.rows?.map(
+        {(tables?.rows || []).map(
           (table: { table_name: string; table_schema: string }, i: number) => (
             <TableLink
               schema={table["table_schema"]}

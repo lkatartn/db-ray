@@ -1,18 +1,27 @@
 import { Box, Flex, keyframes, Tooltip } from "@chakra-ui/react";
-import React from "react";
-import useSWR from "swr";
-import { defaultFetcher } from "./defaultFetcher";
+import React, { useEffect } from "react";
 
 export default function StatusIndicator() {
-  const { data } = useSWR<{ isConnectionFunctioning: boolean }>(
-    "/api/isConnectionFunctioning",
-    defaultFetcher,
-    {
-      refreshInterval: 3000,
-    }
-  );
+  const [isActive, setIsActive] = React.useState(false);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetch("/api/isConnectionFunctioning")
+        .then((res) => {
+          if (res.status === 200) {
+            res
+              .json()
+              .then((parsed) => parsed.isConnectionFunctioning)
+              .then((isActive) => setIsActive(isActive))
+              .catch((err) => setIsActive(false));
+          } else {
+            setIsActive(false);
+          }
+        })
+        .catch((err) => setIsActive(false));
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
-  const isActive = data?.isConnectionFunctioning;
   const activeColor = "green.500";
   const inactiveColor = "red.400";
   const ringScaleMin = 0.33;

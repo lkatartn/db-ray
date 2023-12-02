@@ -12,7 +12,7 @@ export const Header = () => {
   const { layoutState, setSectionState } = useLayout();
   // ProApiKeyStatus type
   type ProApiKeyStatus = "active" | "inactive" | "expired";
-  const { data } = useSWR<{ status: ProApiKeyStatus }>(
+  const { data, error } = useSWR<{ status: ProApiKeyStatus }>(
     "/api/pro/checkProStatus",
     defaultFetcher
   );
