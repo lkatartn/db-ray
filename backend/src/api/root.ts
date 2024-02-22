@@ -84,7 +84,7 @@ rootRouter.post(
       return redirectToConnect(res);
     }
     try {
-      const autoNamePromise = getNameForQuery(query);
+      const queryIsTooBig = query.length > 2500;
       const result = await conn.raw(query);
 
       const record = await addHistoryRecord({
@@ -93,22 +93,26 @@ rootRouter.post(
         forDatabase,
       });
       res.status(200).json(result);
-      if (record.name) return;
-      let name = undefined;
       try {
-        name = await autoNamePromise;
-        await editHistoryRecordByCreationDate({
-          connectionName: "default",
-          createdAt: record.createdAt,
-          name,
-        });
+        if (record.name) return;
+        if (!queryIsTooBig) {
+          const autoNamePromise = getNameForQuery(query);
+          autoNamePromise.then((name) => {
+            if (name) {
+              editHistoryRecordByCreationDate({
+                connectionName: "default",
+                createdAt: record.createdAt,
+                name,
+              });
+            }
+          });
+        }
       } catch (e) {
-        // No name can be created for this query
+        console.error(e);
       }
     } catch (e) {
       console.error(e);
-      res.status(400);
-      res.json(e);
+      res.send(400);
     }
   })
 );

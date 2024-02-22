@@ -30,27 +30,55 @@ export const HistorySection = () => {
     <>
       <SectionHeading mt={1}>History</SectionHeading>
       <SpacerVertical size={2} />
-      <Tabs position="relative" variant="line">
+      <Tabs
+        position="relative"
+        variant="line"
+        flex="1"
+        display={"flex"}
+        flexDirection={"column"}
+        overflow={"auto"}
+      >
         <TabList>
           <Tab flexShrink={0}>Current connection</Tab>
           <Tab flexShrink={0} flexGrow={1}>
             All
           </Tab>
         </TabList>
-        <TabPanels>
-          <TabPanel p={0}>
+        <TabPanels
+          flex={1}
+          display={"flex"}
+          flexDirection={"column"}
+          overflow={"auto"}
+        >
+          <TabPanel p={0} flex={1} display={"flex"} flexDirection={"column"}>
             <SpacerVertical size={10} />
 
-            <CurrentConnectionistorySection />
+            <ScrollableContainer>
+              <CurrentConnectionistorySection />
+            </ScrollableContainer>
           </TabPanel>
-          <TabPanel p={0}>
+          <TabPanel p={0} flex={1} display={"flex"} flexDirection={"column"}>
             <SpacerVertical size={10} />
 
-            <AllHistorySection />
+            <ScrollableContainer>
+              <AllHistorySection />
+            </ScrollableContainer>
           </TabPanel>
         </TabPanels>
       </Tabs>
     </>
+  );
+};
+const ScrollableContainer = (props: React.PropsWithChildren<{}>) => {
+  return (
+    <div
+      className={css({
+        overflowY: "auto",
+        flex: 1,
+      })}
+    >
+      {props.children}
+    </div>
   );
 };
 const CurrentConnectionistorySection = () => {

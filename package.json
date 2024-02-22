@@ -27,7 +27,7 @@
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "@vitejs/plugin-react": "^4.0.3",
+    "@vitejs/plugin-react": "^4.2.1",
     "body-parser": "^1.20.2",
     "cross-env": "^7.0.3",
     "eslint": "^8.45.0",
@@ -41,8 +41,9 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0",
     "swr": "^2.2.4",
+    "ts-node": "^10.9.2",
     "typescript": "^5.0.2",
-    "vite": "^5.0.0-beta.16",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite": "^5.1.1",
+    "vite-tsconfig-paths": "^4.3.1"
   }
 }

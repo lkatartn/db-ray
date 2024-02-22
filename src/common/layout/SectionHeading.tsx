@@ -12,11 +12,14 @@ export const SectionHeading = ({
     <chakra.h2
       className={css({
         lineHeight: "1.2",
-        fontSize: "1.25rem",
-        padding: "12px 16px",
+        fontSize: "0.85rem",
+        letterSpacing: "0.05rem",
+        padding: "10px 16px",
         margin: 0,
         fontWeight: "bold",
       })}
+      color="gray.400"
+      textTransform={"uppercase"}
       {...props}
     >
       {children}

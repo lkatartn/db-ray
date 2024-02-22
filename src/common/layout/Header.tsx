@@ -6,7 +6,7 @@ import useSWR from "swr";
 import { defaultFetcher } from "../defaultFetcher";
 import StatusIndicator from "../StatusIndicator";
 import { chakra } from "@chakra-ui/react";
-const DOMAIN = "https://db-ray.com";
+const DOMAIN = "https://db-ray.pro";
 
 export const Header = () => {
   const { layoutState, setSectionState } = useLayout();
@@ -16,7 +16,6 @@ export const Header = () => {
     "/api/pro/checkProStatus",
     defaultFetcher
   );
-  console.log("data", data);
 
   return (
     <chakra.header

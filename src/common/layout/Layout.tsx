@@ -69,6 +69,9 @@ const HistorySectionOptional = () => {
       className={"history"}
       borderLeftWidth={1}
       borderLeftColor={"gray.100"}
+      display={"flex"}
+      flexDirection={"column"}
+      overflow={"auto"}
     >
       <HistorySection />
     </chakra.section>
